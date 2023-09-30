@@ -12,6 +12,7 @@ import (
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 
+	exec.Command("dir /B")
 	for {
 		fmt.Print("> ")
 		// Read the keyboad input.
