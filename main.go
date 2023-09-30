@@ -4,49 +4,51 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"os/exec"
+	"runtime"
 	"strings"
 )
 
 func main() {
 	reader := bufio.NewReader(os.Stdin)
-	input, err := reader.ReadString('\n') // \n is the delimiter, read until you find a new line, you can use \t
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
 
-	// always trim the spaces from the input
+	for {
+		fmt.Print("> ")
+		// Read the keyboad input.
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+		}
+
+		// Handle the execution of the input.
+		if err = execInput(input); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+		}
+
+	}
+}
+
+func execInput(input string) error {
+	// Remove the newline character.
 	input = strings.TrimSpace(input)
 
-	switch input {
-	case "pwd":
-		pwd()
-	case "ls":
-		ls()
+	// Prepare the command to execute.
+	var cmd *exec.Cmd
+
+	// Determine the operating system and construct the appropriate command.
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("cmd.exe", "/C", input)
+	case "linux", "darwin": // Linux or macOS
+		cmd = exec.Command("bash", "-c", input)
 	default:
-		fmt.Println("Command not found")
-	}
-}
-
-func pwd() {
-	currentDir, _ := os.Getwd()
-	fmt.Println(currentDir)
-}
-
-func ls() {
-	currentDir, _ := os.Getwd()
-	// get files and directories in the current directory
-	files, err := os.ReadDir(currentDir)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		return fmt.Errorf("unsupported operating system: %s", runtime.GOOS)
 	}
 
-	for _, file := range files {
-		if file.IsDir() {
-			fmt.Println(file.Name(), "dir")
-		} else {
-			fmt.Println(file.Name(), "file")
-		}
-	}
+	// Set the correct output device.
+	cmd.Stderr = os.Stderr
+	cmd.Stdout = os.Stdout
+
+	// Execute the command and return the error.
+	return cmd.Run()
 }
