@@ -36,6 +36,7 @@ func execInput(input string) error {
 	var cmd *exec.Cmd
 
 	// Determine the operating system and construct the appropriate command.
+	// /C and -c are used to run the command in a different terminal and close it when the command finishes
 	switch runtime.GOOS {
 	case "windows":
 		cmd = exec.Command("cmd.exe", "/C", input)
