@@ -45,13 +45,14 @@ To exit the shell, press Ctrl+C or enter the exit command.
 
 ## Example Usage
 
-    ```shell
+1.  ```shell
     /home/user@hostname> ls
     file1.txt  file2.txt  folder1  folder2
     /home/user@hostname> cd folder1
     /home/user/folder1@hostname> pwd
     /home/user/folder1
     /home/user/folder1@hostname> exit
+    ```
 
 ## Supported Commands
 
