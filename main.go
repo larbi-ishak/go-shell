@@ -13,7 +13,12 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 
 	for {
-		fmt.Print("> ")
+		// get hostname
+		hostname, err := os.Hostname()
+		// get current directory
+		dir, err := os.Getwd()
+
+		fmt.Print(dir, "@", hostname, "> ")
 		// Read the keyboad input.
 		input, err := reader.ReadString('\n')
 		if err != nil {
